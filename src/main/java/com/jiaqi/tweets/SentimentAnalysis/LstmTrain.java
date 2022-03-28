@@ -31,11 +31,6 @@ public class LstmTrain {
 
     public static void main(String[] args) throws IOException, InterruptedException {
 
-//        File model = new File("word2vec.txt");
-//        Word2Vec vec = WordVectorSerializer.readWord2VecModel(model);
-//        ParagraphVectors paragraphVectors;
-//        LabelAwareIterator labelAwareIterator;
-
         TokenizerFactory tokenizerFactory = new DefaultTokenizerFactory();
 
         ClassPathResource resource = new ClassPathResource("/data.txt");
@@ -44,31 +39,7 @@ public class LstmTrain {
         SentenceIterator iterator = new BasicLineIterator(file);
         tokenizerFactory.setTokenPreProcessor(new CommonPreprocessor());
         LabelsSource labelFormat = new LabelsSource("LINE_");
-
-//        labelAwareIterator = new FileLabelAwareIterator.Builder()
-//                .addSourceFolder(resource.getFile())
-//                .build();
-
-
-//        ParagraphVectors vec = new ParagraphVectors.Builder()
-//                .minWordFrequency(1)
-//                .iterations(5)
-//                .epochs(1)
-//                .layerSize(100)
-//                .learningRate(0.025)
-//                .labelsSource(labelFormat)
-//                .windowSize(5)
-//                .iterate(iterator)
-//                .trainWordVectors(false)
-//                .tokenizerFactory(tokenizerFactory)
-//                .sampling(0)
-//                .build();
-//
-//        vec.fit();
-//        double similar1 = vec.similarity("LINE_28", "LINE_37");
-//        System.out.println("Comparing lines 98 & 124, Similarity = " + similar1);
-
-//
+        
         File modelFile = new File("src/main/resources/word2vec.dat");
         WordVectors wordVectors = WordVectorSerializer.readWord2VecModel(modelFile);;
 
@@ -104,7 +75,7 @@ public class LstmTrain {
         SentimentDataIterator train = new SentimentDataIterator(wordVectors, batchSize, true);
         SentimentDataIterator test = new SentimentDataIterator(wordVectors, batchSize, true);
 
-        int epoch = 10;
+        int epoch = 2;
 
         //train with number of epoch
         for (int i = 0; i < epoch; i++) {
@@ -131,23 +102,25 @@ public class LstmTrain {
 
         }
 
+//        model.save(new File("src/main/resources/LstmModel.zip"), true);
+
         //load sample to generate prediction
 //        String sampleTweet1 = "Bantulah mereka yang kesusahan, berikan sumbangan pada yang memerlukan. Semoga Allah permudahkan urusan kita.";
-        String sampleTweet2 = "cakap dgn org bodoh sampai bila pon tak habis";
+//        String sampleTweet2 = "cakap dgn org bodoh sampai bila pon tak habis";
 //        String sampleTweet3 = "Yeyeah... Mendung dah sampai... Semoga terus bawa hujan";
-//        String sampleTweet4 = "Penat la kepala otak ni";
+        String sampleTweet4 = "Penat la kepala otak ni";
 
-//        String sampleTweet5 = "Terima kasih, happy la";
+//        String sampleTweet5 = "Terima kasih, happy la, suka ini sangat";
 
 
-        INDArray features = test.loadFeaturesFromString(sampleTweet2, 100);
+        INDArray features = test.loadFeaturesFromString(sampleTweet4, 100);
         INDArray networkOutput = model.output(features);
         int timeSeriesLength = (int)networkOutput.size(2);
 
         INDArray probabilitiesAtLastWord = networkOutput.get(NDArrayIndex.point(0), NDArrayIndex.all(), NDArrayIndex.point(timeSeriesLength - 1));
 
         System.out.println("\n\n-------------------------------");
-        System.out.println("Tweet: \n" + sampleTweet2);
+        System.out.println("Tweet: \n" + sampleTweet4);
         System.out.println("\n\nProbabilities at last time step:");
         System.out.println("p(positive): " + probabilitiesAtLastWord.getDouble(0));
         System.out.println("p(negative): " + probabilitiesAtLastWord.getDouble(1));
