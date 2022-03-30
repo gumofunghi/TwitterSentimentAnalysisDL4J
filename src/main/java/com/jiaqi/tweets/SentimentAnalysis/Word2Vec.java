@@ -12,12 +12,17 @@ import org.nd4j.common.util.SerializationUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.List;
 
 public class Word2Vec {
 
     public static void main(String[] args) throws IOException {
 
         SentenceIterator iterator = new LineSentenceIterator(new File("src/main/resources/data.txt"));
+        List<String> stopwords = Files.readAllLines(Paths.get("src/main/resources/malaysian_stopwords.txt"), Charset.defaultCharset() );
 
         iterator.setPreProcessor(new SentencePreProcessor() {
             @Override
@@ -44,6 +49,7 @@ public class Word2Vec {
                 .learningRate(0.025)
                 .iterate(iterator)
                 .tokenizerFactory(tokenizerFactory)
+                .stopWords(stopwords)
                 .build();
         vec.setSentenceIterator(iterator);
         vec.fit();

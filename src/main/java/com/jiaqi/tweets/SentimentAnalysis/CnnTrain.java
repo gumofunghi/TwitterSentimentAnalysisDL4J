@@ -118,22 +118,26 @@ public class CnnTrain {
             System.out.println("Epoch " + i + " complete. Starting evaluation:");
 
             Evaluation evaluation = net.evaluate(testIter);
-
             System.out.println(evaluation.stats());
-        }
 
-        //After training: load a single sentence and generate a prediction
-//        String pathFirstNegativeFile = FilenameUtils.concat(DATA_PATH, "aclImdb/test/neg/0_2.txt");
-//        String contentsFirstNegative = FileUtils.readFileToString(new File(pathFirstNegativeFile),"UTF-8");
-//        INDArray featuresFirstNegative = ((CnnSentenceDataSetIterator)testIter).loadSingleSentence(contentsFirstNegative);
-//
-//        INDArray predictionsFirstNegative = net.outputSingle(featuresFirstNegative);
-//        List<String> labels = testIter.getLabels();
-//
-//        System.out.println("\n\nPredictions for first negative review:");
-//        for( int i=0; i<labels.size(); i++ ){
-//            System.out.println("P(" + labels.get(i) + ") = " + predictionsFirstNegative.getDouble(i));
-//        }
+            evaluation = net.evaluate(trainIter);
+            System.out.println(evaluation.stats());
+
+        }
+        net.save(new File("src/main/resources/cnnModel.zip"), true);
+
+//        After training: load a single sentence and generate a prediction
+        String pathFirstNegativeFile = FilenameUtils.concat(DATA_PATH, "test/negative/951.txt");
+        String contentsFirstNegative = FileUtils.readFileToString(new File(pathFirstNegativeFile),"UTF-8");
+        INDArray featuresFirstNegative = ((CnnSentenceDataSetIterator)testIter).loadSingleSentence(contentsFirstNegative);
+
+        INDArray predictionsFirstNegative = net.outputSingle(featuresFirstNegative);
+        List<String> labels = testIter.getLabels();
+
+        System.out.println("\n\nPredictions for first negative review:");
+        for( int i=0; i<labels.size(); i++ ){
+            System.out.println("P(" + labels.get(i) + ") = " + predictionsFirstNegative.getDouble(i));
+        }
 
 
     }

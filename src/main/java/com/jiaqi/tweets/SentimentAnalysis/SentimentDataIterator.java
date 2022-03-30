@@ -283,7 +283,7 @@ public class SentimentDataIterator implements DataSetIterator {
             if(wordVectors.hasWord(t)) tokensFiltered.add(t);
         }
         int outputLength = Math.max(maxLength,tokensFiltered.size());
-        System.out.println(tokensFiltered);
+//        System.out.println(tokensFiltered);
 
 
         INDArray features = Nd4j.create(1, vectorSize, outputLength);
@@ -294,6 +294,7 @@ public class SentimentDataIterator implements DataSetIterator {
             INDArray vector = wordVectors.getWordVectorMatrix(token);
 //            System.out.println(vector + "    ==== 2 ====");
             features.put(new INDArrayIndex[]{NDArrayIndex.point(0), NDArrayIndex.all(), NDArrayIndex.point(j)}, vector);
+//            System.out.println(features.get(new INDArrayIndex[]{NDArrayIndex.point(0), NDArrayIndex.all(), NDArrayIndex.point(j)}));
         }
 
         return features;

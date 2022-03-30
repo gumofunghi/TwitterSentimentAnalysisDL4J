@@ -30,9 +30,9 @@ public class LoadAndTestModel {
         int batchSize = 50;
 
         SentimentDataIterator test = new SentimentDataIterator(wordVectors, batchSize, false);
-        System.out.println(test.next().getFeatures().shape()[0]);
-        System.out.println(test.next().getFeatures().shape()[1]);
-        System.out.println(test.next().getFeatures().shape()[2]);
+//        System.out.println(test.next().getFeatures().shape()[0]);
+//        System.out.println(test.next().getFeatures().shape()[1]);
+//        System.out.println(test.next().getFeatures().shape()[2]);
         // expected bad review
         String shortNegativeReview = "@AyekKamal yer lah sbb sombong mmg lah ";
         deepLearner.evaluate(test, model, shortNegativeReview);
@@ -51,9 +51,9 @@ public class LoadAndTestModel {
     private void evaluate(SentimentDataIterator test, MultiLayerNetwork model, String review) throws IOException
     {
         INDArray features = test.loadFeaturesFromString(review, 100);
-        System.out.println(features);
+//        System.out.println(features);
         INDArray networkOutput = model.output(features);
-        System.out.println(networkOutput);
+//        System.out.println(networkOutput);
         long timeSeriesLength = networkOutput.size(2);
         INDArray probabilitiesAtLastWord = networkOutput.get(NDArrayIndex.point(0), NDArrayIndex.all(), NDArrayIndex.point(timeSeriesLength - 1));
 
