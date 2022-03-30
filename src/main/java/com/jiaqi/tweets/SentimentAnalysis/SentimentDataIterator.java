@@ -102,6 +102,10 @@ public class SentimentDataIterator implements DataSetIterator {
                 //load positive tweets
                 if (sPos.hasNext()){
                     String tweet = sPos.nextLine();
+                    tweet.replaceAll("http.*?[\\S]+", "")// remove links
+                            .replaceAll("@[\\S]+", "")// remove usernames
+                            .replaceAll("#", "")// replace hashtags by just words
+                            .replaceAll("[\\s]+", " ");// correct all multiple white spaces to a single white space
                     tweets.add(tweet);
                     positive[i] = true;
 //                    System.out.println("POS: " + tweet);
@@ -111,6 +115,10 @@ public class SentimentDataIterator implements DataSetIterator {
                 //load negative tweets
                 if (sNeg.hasNext()){
                     String tweet = sNeg.nextLine();
+                    tweet.replaceAll("http.*?[\\S]+", "")// remove links
+                            .replaceAll("@[\\S]+", "")// remove usernames
+                            .replaceAll("#", "")// replace hashtags by just words
+                            .replaceAll("[\\s]+", " ");// correct all multiple white spaces to a single white space
                     tweets.add(tweet);
                     positive[i] = false;
 //                    System.out.println("NEG: " + tweet);
@@ -275,6 +283,7 @@ public class SentimentDataIterator implements DataSetIterator {
             if(wordVectors.hasWord(t)) tokensFiltered.add(t);
         }
         int outputLength = Math.max(maxLength,tokensFiltered.size());
+        System.out.println(tokensFiltered);
 
 
         INDArray features = Nd4j.create(1, vectorSize, outputLength);

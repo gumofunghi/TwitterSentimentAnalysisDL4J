@@ -25,12 +25,15 @@ public class RulesUpdater {
         String bearerToken = "AAAAAAAAAAAAAAAAAAAAAAfPaAEAAAAActJcntpFgAQIhZPy1Egug5SCuHo%3DqqsqYPI0P67WqpUCKiXUGdMBCjJlXwg4zNTMnENDFHaaTPCVZ1";
 
         //delete rule
-        String ruleID = "1504348652017717252";
-        deleteRule(bearerToken, ruleID);
-
-        //add rule
-        Map<String, String> rule = new HashMap<>();
-//        rule.put("kita OR mereka OR saya OR saye", "Malay tweets");
+//        String ruleID = "1508373856615948300";//eat
+//        String ruleID = "1508373856615948301";//makan
+//
+//        deleteRule(bearerToken, ruleID);
+//
+//        //add rule
+//        Map<String, String> rule = new HashMap<>();
+//        rule.put("makan", "Makan");
+//        rule.put("eat", "Eat");
 //        setRule(bearerToken, rule);
 
         //list of rules

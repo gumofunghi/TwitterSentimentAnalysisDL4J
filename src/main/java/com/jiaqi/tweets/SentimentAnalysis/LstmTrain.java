@@ -70,12 +70,12 @@ public class LstmTrain {
         model.init();
         model.setListeners(new ScoreIterationListener(1));
 
-        int batchSize = 50;
+        int batchSize = 100;
 
         SentimentDataIterator train = new SentimentDataIterator(wordVectors, batchSize, true);
-        SentimentDataIterator test = new SentimentDataIterator(wordVectors, batchSize, true);
+        SentimentDataIterator test = new SentimentDataIterator(wordVectors, batchSize, false);
 
-        int epoch = 2;
+        int epoch = 5;
 
         //train with number of epoch
         for (int i = 0; i < epoch; i++) {
@@ -102,7 +102,7 @@ public class LstmTrain {
 
         }
 
-//        model.save(new File("src/main/resources/LstmModel.zip"), true);
+        model.save(new File("src/main/resources/LstmModel.zip"), true);
 
         //load sample to generate prediction
 //        String sampleTweet1 = "Bantulah mereka yang kesusahan, berikan sumbangan pada yang memerlukan. Semoga Allah permudahkan urusan kita.";

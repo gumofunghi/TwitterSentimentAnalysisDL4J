@@ -22,6 +22,11 @@ public class Word2Vec {
         iterator.setPreProcessor(new SentencePreProcessor() {
             @Override
             public String preProcess(String s) {
+                s.replaceAll("http.*?[\\S]+", "")// remove links
+                        .replaceAll("@[\\S]+", "")// remove usernames
+                        .replaceAll("#", "")// replace hashtags by just words
+                        .replaceAll("[\\s]+", " ");// correct all multiple white spaces to a single white space
+
                 return s.toLowerCase();
             }
         });

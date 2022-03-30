@@ -20,8 +20,6 @@ public class AppConfiguration {
     @Bean
     public WebClient webClient(){
 
-        logger.info("Test Test A");
-
         return WebClient.builder()
                 .defaultHeader("Authorization", "Bearer AAAAAAAAAAAAAAAAAAAAAAfPaAEAAAAActJcntpFgAQIhZPy1Egug5SCuHo%3DqqsqYPI0P67WqpUCKiXUGdMBCjJlXwg4zNTMnENDFHaaTPCVZ1")
                 .baseUrl(TWITTER_API)

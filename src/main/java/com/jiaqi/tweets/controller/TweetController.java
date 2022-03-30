@@ -26,35 +26,22 @@ public class TweetController {
     @Autowired
     private Sinks.Many<Tweet> sink;
 
+    private SentimentAnalysisController sentimentAnalysisController;
+
     @GetMapping(value = "tweet", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public Flux<String> publish() throws IOException {
-        logger.info("Test Test B");
-
+        logger.info("flux");
         return this.webClient.get()
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
                 .bodyToFlux(String.class)
                 .map(message -> {
+
                     logger.info(message);
-//                    if(!message.isEmpty()){
-//                        try {
-//                            Tweet tweet = new ObjectMapper()
-//                                    .readerFor(Tweet.class)
-//                                    .readValue(message);
-//
-////                        logger.info(text);
-////
-//                            FileWriter fw = new FileWriter("data.txt",  true);
-//                            PrintWriter out = new PrintWriter(fw);
-//                            out.println(tweet.getText());
-//
-//                            System.out.println(tweet.getText());
-//
-//                        } catch (IOException e) {
-//                            System.out.println(e.getMessage());
-//                            e.printStackTrace();
-//                        }
-//                    }
+
+//                    if(message != null)
+//                        sentimentAnalysisController.evaluateTweet(message);
+
                     return message;
                 });
 

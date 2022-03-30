@@ -123,6 +123,17 @@
             <artifactId>deeplearning4j-nn</artifactId>
             <version>${dl4j-master.version}</version>
         </dependency>
+		<dependency>
+			<groupId>org.twitter4j</groupId>
+			<artifactId>twitter4j-core</artifactId>
+			<version>4.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.twitter4j</groupId>
+			<artifactId>twitter4j-async</artifactId>
+			<version>4.0.0</version>
+			<scope>test</scope>
+		</dependency>
 
     </dependencies>
 

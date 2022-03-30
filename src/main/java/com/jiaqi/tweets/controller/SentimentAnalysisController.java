@@ -20,18 +20,18 @@ public class SentimentAnalysisController {
 
     public SentimentAnalysisController() throws IOException {
 
-        trainedModelPath = "src/main/resources/LstmModel.zip";
-        model = ModelSerializer.restoreMultiLayerNetwork(trainedModelPath);
-        wordVectors = WordVectorSerializer.loadStaticModel(new File("src/main/resources/word2vec.dat"));
-        test = new SentimentDataIterator(wordVectors, 100, false);
+        this.trainedModelPath = "src/main/resources/LstmModel.zip";
+        this.model = ModelSerializer.restoreMultiLayerNetwork(trainedModelPath);
+        this.wordVectors = WordVectorSerializer.loadStaticModel(new File("src/main/resources/word2vec.dat"));
+        this.test = new SentimentDataIterator(wordVectors, 100, false);
 
     }
 
     //to do sentiment analysis on tweet
-    public void evaluateTweet(SentimentDataIterator test, MultiLayerNetwork model, String tweet) throws IOException
+    public void evaluateTweet(String tweet)
     {
-        INDArray features = test.loadFeaturesFromString(tweet, 100);
-        INDArray networkOutput = model.output(features);
+        INDArray features = this.test.loadFeaturesFromString(tweet, 100);
+        INDArray networkOutput = this.model.output(features);
         long timeSeriesLength = networkOutput.size(2);
         INDArray probabilitiesAtLastWord = networkOutput.get(NDArrayIndex.point(0), NDArrayIndex.all(), NDArrayIndex.point(timeSeriesLength - 1));
 
