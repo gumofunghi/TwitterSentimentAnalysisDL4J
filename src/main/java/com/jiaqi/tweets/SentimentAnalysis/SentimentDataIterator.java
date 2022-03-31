@@ -54,10 +54,10 @@ public class SentimentDataIterator implements DataSetIterator {
         this.training = training;
 
         if(this.training){
-            positiveFile = new File("src/main/resources/labeled/positive_small.txt");
-            positivePath = "src/main/resources/labeled/positive_small.txt";
-            negativeFile = new File("src/main/resources/labeled/negative_small.txt");
-            negativePath = "src/main/resources/labeled/negative_small.txt";
+            positiveFile = new File("src/main/resources/labeled/positive.txt");
+            positivePath = "src/main/resources/labeled/positive.txt";
+            negativeFile = new File("src/main/resources/labeled/negative.txt");
+            negativePath = "src/main/resources/labeled/negative.txt";
 //            System.out.println("---------------------TRAIN______________________________");
         }else{
             positiveFile = new File("src/main/resources/test/positive.txt");
@@ -286,7 +286,7 @@ public class SentimentDataIterator implements DataSetIterator {
 //        System.out.println(tokensFiltered);
 
 
-        INDArray features = Nd4j.create(1, vectorSize, outputLength);
+        INDArray features = Nd4j.create(outputLength, vectorSize, tokensFiltered.size());
 
         for( int j=0; j<tokensFiltered.size() && j<maxLength; j++ ){
             String token = tokensFiltered.get(j);

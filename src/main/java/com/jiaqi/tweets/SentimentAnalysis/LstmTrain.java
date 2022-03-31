@@ -92,6 +92,8 @@ public class LstmTrain {
             while (train.hasNext()) {
                 DataSet t = train.next();
                 INDArray features = t.getFeatures();
+//                System.out.println("Train set feature");
+//                System.out.println(features.shapeInfoToString()+"\n\n");
                 INDArray labels = t.getLabels();
                 INDArray inMask = t.getFeaturesMaskArray();
                 INDArray outMask = t.getLabelsMaskArray();
@@ -108,6 +110,8 @@ public class LstmTrain {
             while (test.hasNext()) {
                 DataSet t = test.next();
                 INDArray features = t.getFeatures();
+//                System.out.println("Test set feature");
+//                System.out.println(features.shapeInfoToString()+"\n\n");
                 INDArray labels = t.getLabels();
                 INDArray inMask = t.getFeaturesMaskArray();
                 INDArray outMask = t.getLabelsMaskArray();
@@ -124,45 +128,36 @@ public class LstmTrain {
 
         }
 
-//        model.save(new File("src/main/resources/LstmModel.zip"), true);
+        model.save(new File("src/main/resources/LstmModel.zip"), true);
 
         //load sample to generate prediction
-        List<String> sampleTweets = Arrays.asList("Bantulah mereka yang kesusahan, berikan sumbangan pada yang memerlukan. Semoga Allah permudahkan urusan kita.",
-                "Sahur tengah malam kaya nya enak ya... ",
+        List<String> sampleTweets = Arrays.asList("Saya benci apabila someones blackberry berjalan dan bukannya saya.",//from here negative
+                "sibuk menulis postingan blog saya yang seterusnya dan tiba-tiba menyedari saya terlupa makan nasi bebek di msia.",
                 "cakap dgn org bodoh sampai bila pon tak habis",
-                "Penat la kepala otak ni",
-                "Terima kasih, happy la, suka ini sangat",
-                "Comel anak patung",
-                "Rezeki duduk tepi tingkap. Ahakkkks",
-                "Kan best kalau ada peti sejuk mini dalam bilik",
-                "Tukarlah nama jadi Periuk babi tentu tak ada org nak ambil dah hajgsjagajahagaha");
+                "saya boleh jujur mengatakan saya tidak ingat sesuatu.",
+                "saya terlalu rendah. . . Saya tidak pernah merasa tidak diingini dalam hidup saya. . . semua orang cuba menyingkirkan saya",
+                "Saya akan menghantar apa-apa yang baik yang saya dapati",//from here positive
+                "kebahagiaan yang boleh dipetik adalah produk yang mudah digunakan, dan membuat anda tersenyum setiap kali anda menggunakannya. quot gt macbook pro",
+                "terima kasih tuhan saya boleh maju cepat haha",
+                "saya di muzium getty di la. hari yang menyeronokkan.",
+                "pagi! cuaca lebih baik hari ini! hanya pelurus rambut saya");
+
 
         for(int i=0; i<sampleTweets.size();i++){
 
-//            INDArray result = classifier.outputSingle(features);
-//
-//            String[] labels = new String[]{"Negative", "Positive"};
-//
-//            List<Double> scores = new ArrayList<>();
-//
-//            for (int i = 0; i < labels.length; i++) {
-//                System.out.println(labels[i] + ": " + result.getDouble(i));
-//                scores.add(result.getDouble(i));
-//            }
-//
-//            return scores.get(1) - scores.get(0);
-
-            INDArray features = test.loadFeaturesFromString(sampleTweets.get(i), 0);
+            INDArray features = test.loadFeaturesFromString(sampleTweets.get(i), 100);
+            System.out.println("Prediction feature"+"\n");
+            System.out.println(features.shapeInfoToString()+"\n\n");
             INDArray networkOutput = model.output(features);//result
-            System.out.println("NetworkOutput");
-            System.out.println(networkOutput);
+//            System.out.println("NetworkOutput");
+//            System.out.println(networkOutput);
 
             //---
             int timeSeriesLength = (int)networkOutput.size(2);
-            System.out.println("TimeSeriesLength");
-            System.out.println(timeSeriesLength);
+//            System.out.println("TimeSeriesLength");
+//            System.out.println(timeSeriesLength);
 
-            INDArray probabilitiesAtLastWord = networkOutput.get(NDArrayIndex.point(0), NDArrayIndex.all(), NDArrayIndex.point(0));
+            INDArray probabilitiesAtLastWord = networkOutput.get(NDArrayIndex.point(0), NDArrayIndex.all(), NDArrayIndex.point(timeSeriesLength - 1));
             //---
 
             System.out.println("ProbabilitiesAtLastWord");

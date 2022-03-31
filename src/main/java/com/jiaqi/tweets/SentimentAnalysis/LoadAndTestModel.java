@@ -42,15 +42,15 @@ public class LoadAndTestModel {
         deepLearner.evaluate(test, model, secondBadReview);
 
         // a good review follows (hopefully)
-        String goodReview = "Sahur tengah malam kaya nya enak ya... ";
+        String goodReview = "akhirnya membeli gitar impian saya, sebuah dewan besar taylor 514ce. . . Saya rasa saya dilamun cinta";
         deepLearner.evaluate(test, model, goodReview);
 
         System.out.println("----- Evaluation complete -----");
     }
 
-    private void evaluate(SentimentDataIterator test, MultiLayerNetwork model, String review) throws IOException
+    private void evaluate(SentimentDataIterator test, MultiLayerNetwork model, String tweet) throws IOException
     {
-        INDArray features = test.loadFeaturesFromString(review, 100);
+        INDArray features = test.loadFeaturesFromString(tweet, 100);
 //        System.out.println(features);
         INDArray networkOutput = model.output(features);
 //        System.out.println(networkOutput);
@@ -58,7 +58,7 @@ public class LoadAndTestModel {
         INDArray probabilitiesAtLastWord = networkOutput.get(NDArrayIndex.point(0), NDArrayIndex.all(), NDArrayIndex.point(timeSeriesLength - 1));
 
         System.out.println("\n\n-------------------------------");
-        System.out.println("Review: \n" + review);
+        System.out.println("Review: \n" + tweet);
         System.out.println("\n\nProbabilities at last time step:");
         System.out.println("p(positive): " + probabilitiesAtLastWord.getDouble(0));
         System.out.println("p(negative): " + probabilitiesAtLastWord.getDouble(1));

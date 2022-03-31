@@ -1,9 +1,6 @@
 package com.jiaqi.tweets.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.jiaqi.tweets.Tweet;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jiaqi.tweets.model.Tweet;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +18,7 @@ import java.io.*;
 public class TweetController {
 
     private final Logger logger = LoggerFactory.getLogger(TweetController.class);
+
     @Autowired
     private WebClient webClient;
     @Autowired

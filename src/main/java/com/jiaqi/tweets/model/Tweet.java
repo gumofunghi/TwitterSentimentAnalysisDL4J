@@ -1,21 +1,19 @@
-package com.jiaqi.tweets;
+package com.jiaqi.tweets.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
-import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
 @Data
 @JsonIgnoreProperties("matching_rules")
-public class Tweet implements Serializable{
+public class Tweet{
 
     private String id;
     private String text;
-//    private List<String> rule_id;
-//    private List<String> rule_tag;
+    private List<String> rule_id;
+    private List<String> rule_tag;
 
     public String getId() {
         return id;
@@ -25,13 +23,13 @@ public class Tweet implements Serializable{
         return text;
     }
 
-//    public List<String> getRule_tag() {
-//        return rule_tag;
-//    }
-//
-//    public List<String> getRule_id() {
-//        return rule_id;
-//    }
+    public List<String> getRule_tag() {
+        return rule_tag;
+    }
+
+    public List<String> getRule_id() {
+        return rule_id;
+    }
 
     @SuppressWarnings("unchecked")
     @JsonProperty("data")
@@ -39,4 +37,6 @@ public class Tweet implements Serializable{
         this.id = (String)data.get("id");
         this.text = (String)data.get("text");
     }
+
+
 }
