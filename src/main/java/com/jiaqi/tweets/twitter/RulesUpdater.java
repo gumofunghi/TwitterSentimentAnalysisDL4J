@@ -20,20 +20,26 @@ import java.util.*;
 
 public class RulesUpdater {
 
-
+    //this class is to check, update and delete the rules in Twitter API Filter Stream
+    //in a very manual method
     public static void main(String args[]) throws IOException, URISyntaxException {
         String bearerToken = "AAAAAAAAAAAAAAAAAAAAAAfPaAEAAAAActJcntpFgAQIhZPy1Egug5SCuHo%3DqqsqYPI0P67WqpUCKiXUGdMBCjJlXwg4zNTMnENDFHaaTPCVZ1";
 
-        //delete rule
-//        String ruleID = "1508373856615948300";//eat
-//        String ruleID = "1508373856615948301";//makan
-//
+        //delete rule //uncomment when needed
+//        String ruleID = "1509723459852828674";//raya
 //        deleteRule(bearerToken, ruleID);
+//        ruleID = "1509723459852828675";//makan
+//        deleteRule(bearerToken, ruleID);
+//        ruleID = "1509723459852828676";//uitm
+//        deleteRule(bearerToken, ruleID);
+
 //
-//        //add rule
+//        //add rule //uncomment when needed
 //        Map<String, String> rule = new HashMap<>();
-//        rule.put("makan", "Makan");
-//        rule.put("eat", "Eat");
+//        rule.put("-is:retweet -has:mentions -has:media -has:images -has:videos UiTM", "UiTM");
+//        rule.put("-is:retweet -has:mentions -has:media -has:images -has:videos makan", "Makan");
+//        rule.put("-is:retweet -has:mentions -has:media -has:images -has:videos raya ", "Raya");
+//
 //        setRule(bearerToken, rule);
 
         //list of rules

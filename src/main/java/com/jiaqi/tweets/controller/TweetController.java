@@ -1,5 +1,8 @@
 package com.jiaqi.tweets.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jiaqi.tweets.model.Tweet;
 
 import org.slf4j.Logger;
@@ -26,6 +29,10 @@ public class TweetController {
 
     private SentimentAnalysisController sentimentAnalysisController;
 
+    public TweetController() throws IOException {
+        sentimentAnalysisController = new SentimentAnalysisController();
+    }
+
     @GetMapping(value = "tweet", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public Flux<String> publish() throws IOException {
         logger.info("flux");
@@ -36,11 +43,26 @@ public class TweetController {
                 .map(message -> {
 
                     logger.info(message);
+                    try {
+                        Tweet tweet = new ObjectMapper()
+                                .readerFor(Tweet.class)
+                                .readValue(message);
+//                        System.out.println(tweet.getText());
 
-//                    if(message != null)
-//                        sentimentAnalysisController.evaluateTweet(message);
+                        double score = sentimentAnalysisController.evaluateTweet(tweet.getText());
+
+                        String newMessage = "{\"text\": \"" + tweet.getText() + "\", \"score\": " + score + "}";
+
+//                        System.out.println(newMessage);
+
+                        return newMessage;
+
+                    } catch (JsonProcessingException e) {
+                        e.printStackTrace();
+                    }
 
                     return message;
+
                 });
 
     }

@@ -1,0 +1,15 @@
+#tweets-grouping{
+    margin-top: 3rem;
+}
+
+#positive-card{
+    background-color: rgb(229, 255, 203);
+}
+
+#negative-card{
+    background-color: rgb(255, 206, 206);
+}
+
+#neutral-card{
+    background-color: rgb(203, 226, 255);
+}

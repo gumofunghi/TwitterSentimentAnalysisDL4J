@@ -28,19 +28,20 @@ public class SentimentAnalysisController {
     }
 
     //to do sentiment analysis on tweet
-    public void evaluateTweet(String tweet)
+    public double evaluateTweet(String tweet)
     {
         INDArray features = this.test.loadFeaturesFromString(tweet, 100);
         INDArray networkOutput = this.model.output(features);
         long timeSeriesLength = networkOutput.size(2);
         INDArray probabilitiesAtLastWord = networkOutput.get(NDArrayIndex.point(0), NDArrayIndex.all(), NDArrayIndex.point(timeSeriesLength - 1));
 
-        System.out.println("\n\n-------------------------------");
-        System.out.println("Tweet: \n" + tweet);
-        System.out.println("\n\nProbabilities at last time step:");
-        System.out.println("p(positive): " + probabilitiesAtLastWord.getDouble(0));
-        System.out.println("p(negative): " + probabilitiesAtLastWord.getDouble(1));
+//        System.out.println("\n\n-------------------------------");
+//        System.out.println("Tweet: \n" + tweet);
+//        System.out.println("\n\nProbabilities at last time step:");
+//        System.out.println("p(positive): " + probabilitiesAtLastWord.getDouble(0));
+//        System.out.println("p(negative): " + probabilitiesAtLastWord.getDouble(1));
+        System.out.println("----- Evaluate complete ----- " + (probabilitiesAtLastWord.getDouble(0)-probabilitiesAtLastWord.getDouble(1)));
 
-        System.out.println("----- Evaluate complete -----");
+        return probabilitiesAtLastWord.getDouble(0) - probabilitiesAtLastWord.getDouble(1); // Return the score at here
     }
 }

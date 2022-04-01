@@ -14,6 +14,9 @@ public class Tweet{
     private String text;
     private List<String> rule_id;
     private List<String> rule_tag;
+//    @JsonProperty("score")
+//    public double score;
+
 
     public String getId() {
         return id;
