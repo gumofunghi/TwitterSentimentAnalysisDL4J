@@ -11,15 +11,30 @@ The tweets are grouped according sentiment similarity, which are positive, negat
 
 ----------
 
-There are 2 models used in this project, which are Word2Vec model and  Long Short Term Memory (LSTM) model.
+There are 2 models used in this project, which are Word2Vec model and Long Short Term Memory (LSTM) model.
 
 ## Word2Vec Model
 
-Word2Vec Model is a neural network model that processes text corpuses into sets of vectors. 
+Word2Vec Model is a neural network model that processes text corpus into sets of vectors.
+It is used to find the cosine distance or similarity between words. In the project, 
+the Word2Vec architecture used is continuous skip-gram, which it
+predicts surrounding window of context words by using the current word. The input
+layer reads the words and encoded them separately as nodes. The hidden layer will
+do the convergence job while the output layer will produce word vectors that have the 
+same size as the input layer.
+
 
 ## LSTM Model
-LSTM model is a modified version of recurrent neural networks(RNN) which it is easier to remember past data
-in memory. 
+LSTM model is a modified version of recurrent neural networks(RNN) which aims to solve the
+vanishing gradient problem as it is easier to remember past data
+in memory. In this project, the model applied is a two layer LSTM model, which are the
+LSTM layer and RNN output layer. In the LSTM model, the activation function applied
+is *tanh* function which is used to determine the level of importance of the values
+that pass through the input gate and output gate of each node. In the nodes,
+sigmoid function is used to decide which value can pass through input and output gate
+or be discarded in forget gate. After the data passing through LSTM layer, 
+it will pass through the RNN output layer with *softmax* activation function 
+to get the final value.
 
 
 
@@ -54,10 +69,12 @@ in the data. An increasing of *minWordFrequency* in this project may reduce the 
 considered large, which is 625,528 lines of tweets data. However, the accuracy of the prediction might be decreased in some
 cases as some rare words will be filtered out if *minWordFrequency* is increased.
 
-On the other hand, 
+On the other hand, dropout may be applied to the LSTM model to improve the performance of the model as it may 
+reduce over-fitting of model towards training data. The dropout ratio must be chosen carefully as it might 
+reduce overall accuracy of the model.
 
 
-###Acknowledgement
+### Acknowledgement
 
 Thanks to the contribution of Husein Zolkepli and his team
 in collecting and processing Malay-Dataset.
