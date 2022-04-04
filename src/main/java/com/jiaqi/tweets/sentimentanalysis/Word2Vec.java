@@ -1,4 +1,4 @@
-package com.jiaqi.tweets.SentimentAnalysis;
+package com.jiaqi.tweets.sentimentanalysis;
 
 
 import org.deeplearning4j.models.embeddings.loader.WordVectorSerializer;
@@ -8,7 +8,6 @@ import org.deeplearning4j.text.sentenceiterator.SentencePreProcessor;
 import org.deeplearning4j.text.tokenization.tokenizer.preprocessor.CommonPreprocessor;
 import org.deeplearning4j.text.tokenization.tokenizerfactory.DefaultTokenizerFactory;
 import org.deeplearning4j.text.tokenization.tokenizerfactory.TokenizerFactory;
-import org.nd4j.common.util.SerializationUtils;
 
 import java.io.File;
 import java.io.IOException;

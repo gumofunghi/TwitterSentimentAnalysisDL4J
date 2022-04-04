@@ -29,6 +29,8 @@ public class TweetController {
 
     private SentimentAnalysisController sentimentAnalysisController;
 
+    private int tweetNum = 0;
+
     public TweetController() throws IOException {
         sentimentAnalysisController = new SentimentAnalysisController();
     }
@@ -47,13 +49,12 @@ public class TweetController {
                         Tweet tweet = new ObjectMapper()
                                 .readerFor(Tweet.class)
                                 .readValue(message);
-//                        System.out.println(tweet.getText());
+                        tweetNum++;
 
                         double score = sentimentAnalysisController.evaluateTweet(tweet.getText());
 
-                        String newMessage = "{\"text\": \"" + tweet.getText() + "\", \"score\": " + score + "}";
-
-//                        System.out.println(newMessage);
+                        String newMessage = "{\"text\": \"" + tweet.getText() + "\", \"score\": " + score
+                                + ", \"count\": " + tweetNum + "}";
 
                         return newMessage;
 

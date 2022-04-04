@@ -1,6 +1,6 @@
 package com.jiaqi.tweets.controller;
 
-import com.jiaqi.tweets.SentimentAnalysis.SentimentDataIterator;
+import com.jiaqi.tweets.sentimentanalysis.SentimentDataIterator;
 import org.deeplearning4j.models.embeddings.loader.WordVectorSerializer;
 import org.deeplearning4j.models.embeddings.wordvectors.WordVectors;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
@@ -35,11 +35,6 @@ public class SentimentAnalysisController {
         long timeSeriesLength = networkOutput.size(2);
         INDArray probabilitiesAtLastWord = networkOutput.get(NDArrayIndex.point(0), NDArrayIndex.all(), NDArrayIndex.point(timeSeriesLength - 1));
 
-//        System.out.println("\n\n-------------------------------");
-//        System.out.println("Tweet: \n" + tweet);
-//        System.out.println("\n\nProbabilities at last time step:");
-//        System.out.println("p(positive): " + probabilitiesAtLastWord.getDouble(0));
-//        System.out.println("p(negative): " + probabilitiesAtLastWord.getDouble(1));
         System.out.println("----- Evaluate complete ----- " + (probabilitiesAtLastWord.getDouble(0)-probabilitiesAtLastWord.getDouble(1)));
 
         return probabilitiesAtLastWord.getDouble(0) - probabilitiesAtLastWord.getDouble(1); // Return the score at here

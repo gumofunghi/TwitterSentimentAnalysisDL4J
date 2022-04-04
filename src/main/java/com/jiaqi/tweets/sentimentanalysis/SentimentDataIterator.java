@@ -1,4 +1,4 @@
-package com.jiaqi.tweets.SentimentAnalysis;
+package com.jiaqi.tweets.sentimentanalysis;
 
 import lombok.SneakyThrows;
 import org.deeplearning4j.models.embeddings.wordvectors.WordVectors;
@@ -14,7 +14,6 @@ import org.nd4j.linalg.indexing.INDArrayIndex;
 import org.nd4j.linalg.indexing.NDArrayIndex;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -28,7 +27,6 @@ public class SentimentDataIterator implements DataSetIterator {
     private final WordVectors wordVectors;
     private final int batchSize;
     private final int vectorSize;
-//    private final int truncateLength;
 
     private int cursor = 0;
     private int positiveFileLength;
@@ -46,28 +44,20 @@ public class SentimentDataIterator implements DataSetIterator {
     public  SentimentDataIterator(WordVectors wordVectors, int batchSize, boolean training) throws IOException {
         this.batchSize = batchSize;
         this.vectorSize = wordVectors.getWordVector(wordVectors.vocab().wordAtIndex(0)).length;
-//        System.out.println(this.vectorSize);
-
         this.wordVectors = wordVectors;
-//        this.truncateLength = truncateLength;
-
         this.training = training;
 
-        if(this.training){
+        if(this.training){ //training files and path
             positiveFile = new File("src/main/resources/labeled/positive.txt");
             positivePath = "src/main/resources/labeled/positive.txt";
             negativeFile = new File("src/main/resources/labeled/negative.txt");
             negativePath = "src/main/resources/labeled/negative.txt";
-//            System.out.println("---------------------TRAIN______________________________");
-        }else{
+        }else{ //testing files and path
             positiveFile = new File("src/main/resources/test/positive.txt");
             positivePath = "src/main/resources/test/positive.txt";
             negativeFile = new File("src/main/resources/test/negative.txt");
             negativePath = "src/main/resources/test/negative.txt";
-
-//            System.out.println("---------------------TEST______________________________");
         }
-
         totalExamples();
         sPos = new Scanner(positiveFile);
         sNeg = new Scanner(negativeFile);
@@ -77,14 +67,11 @@ public class SentimentDataIterator implements DataSetIterator {
 
     @Override
     public DataSet next(int num) throws NoSuchElementException {
-//        System.out.println("cursor: " + cursor + " dataset here ");
         if (cursor >= positiveFileLength + negativeFileLength || cursor/2 >= positiveFileLength || cursor/2 >= negativeFileLength) throw new NoSuchElementException();
         else{
             try{
-//                System.out.println(num);
                 return  nextDataSet(num);
             }catch (IOException e){
-//                System.out.println(e);
                 throw new RuntimeException(e);
             }
         }
@@ -97,41 +84,32 @@ public class SentimentDataIterator implements DataSetIterator {
 
         List<String> tweets = new ArrayList<>(num);
         boolean[] positive = new boolean[num];
+        String tweet = "";
         for(int i=0; i<num && (cursor/2 < positiveFileLength && cursor/2 < negativeFileLength); i++){
             if(cursor % 2 == 0){
                 //load positive tweets
                 if (sPos.hasNext()){
-                    String tweet = sPos.nextLine();
-                    tweet.replaceAll("http.*?[\\S]+", "")// remove links
-                            .replaceAll("@[\\S]+", "")// remove usernames
-                            .replaceAll("#", "")// replace hashtags by just words
-                            .replaceAll("[\\s]+", " ");// correct all multiple white spaces to a single white space
-                    tweets.add(tweet);
+                    tweet = sPos.nextLine();
                     positive[i] = true;
-//                    System.out.println("POS: " + tweet);
                 }
             }
             else{
                 //load negative tweets
                 if (sNeg.hasNext()){
-                    String tweet = sNeg.nextLine();
-                    tweet.replaceAll("http.*?[\\S]+", "")// remove links
-                            .replaceAll("@[\\S]+", "")// remove usernames
-                            .replaceAll("#", "")// replace hashtags by just words
-                            .replaceAll("[\\s]+", " ");// correct all multiple white spaces to a single white space
-                    tweets.add(tweet);
+                    tweet = sNeg.nextLine();
                     positive[i] = false;
-//                    System.out.println("NEG: " + tweet);
                 }
             }
-//            System.out.println("pfile length: " + positiveFileLength);
-//            System.out.println("nfile length: " + negativeFileLength);
-//            System.out.println("CUrsor: " + cursor);
+            tweet.replaceAll("http.*?[\\S]+", "")// remove links
+                    .replaceAll("@[\\S]+", "")// remove usernames
+                    .replaceAll("#", "")// replace hashtags by just words
+                    .replaceAll("[\\s]+", " ");// correct all multiple white spaces to a single white space
+            tweets.add(tweet);
             cursor++;
         }
+
         //Second: tokenize tweets and filter out unknown words
         List<List<String>> allTokens = new ArrayList<>(tweets.size());
-//        System.out.println(tweets.size());
         int maxLength = 0;
         for(String s : tweets){
             List<String> tokens = tokenizerFactory.create(s).getTokens();
@@ -145,15 +123,10 @@ public class SentimentDataIterator implements DataSetIterator {
         }
 
         //Create data for training
-        //Here: we have reviews.size() examples of varying lengths
-//        System.out.println(tweets.size() + " " + vectorSize + " " + maxLength);
         INDArray features = Nd4j.create(tweets.size(), vectorSize, maxLength);
         INDArray labels = Nd4j.create(tweets.size(), 2, maxLength);    //Two labels: positive or negative
-        //Because we are dealing with reviews of different lengths and only one output at the final time step: use padding arrays
-        //Mask arrays contain 1 if data is present at that time step for that example, or 0 if data is just padding
         INDArray featuresMask = Nd4j.zeros(tweets.size(), maxLength);
         INDArray labelsMask = Nd4j.zeros(tweets.size(), maxLength);
-
 
         int[] temp = new int[2];
         for( int i=0; i<tweets.size(); i++ ){
@@ -170,7 +143,6 @@ public class SentimentDataIterator implements DataSetIterator {
             }
 
             int idx = (positive[i] ? 0 : 1);
-//            System.out.println(maxLength);
             int lastIdx = Math.min(tokens.size(),maxLength);
             labels.putScalar(new int[]{i,idx,lastIdx-1},1.0);   //Set label: [0,1] for negative, [1,0] for positive
             labelsMask.putScalar(new int[]{i,lastIdx-1},1.0);   //Specify that an output exists at the final time step for this example
@@ -180,7 +152,7 @@ public class SentimentDataIterator implements DataSetIterator {
     }
 
 
-    public int totalExamples() throws IOException {
+    public int totalExamples() throws IOException { //get total number of lines in text file
         Path path = Paths.get(positivePath);
         long positiveLength = Files.lines(path).count();
         positiveFileLength = (int) positiveLength;
@@ -190,7 +162,6 @@ public class SentimentDataIterator implements DataSetIterator {
         negativeFileLength = (int) negativeLength;
 
         return (int)(positiveLength + negativeLength);
-//        return 0;
     }
 
     @Override
@@ -206,15 +177,11 @@ public class SentimentDataIterator implements DataSetIterator {
     @SneakyThrows
     @Override
     public void reset() {
-        cursor = 0;
-
-        this.sNeg.close();
-        this.sPos.close();
-        sPos = new Scanner(positiveFile);
+        cursor = 0; //reset cursor to 0
+        this.sNeg.close(); //close negative file scanner
+        this.sPos.close(); //close positive file scanner
+        sPos = new Scanner(positiveFile); //declare scanner again
         sNeg = new Scanner(negativeFile);
-
-
-
     }
 
     public boolean resetSupported() {
@@ -252,14 +219,11 @@ public class SentimentDataIterator implements DataSetIterator {
     @SneakyThrows
     @Override
     public boolean hasNext() {
-
             if(cursor < numExamples() && (cursor/2 < positiveFileLength && cursor/2 < negativeFileLength)){
                 return true;
             }
             else
                 return false;
-
-//        return false;
     }
 
     @Override
@@ -283,20 +247,14 @@ public class SentimentDataIterator implements DataSetIterator {
             if(wordVectors.hasWord(t)) tokensFiltered.add(t);
         }
         int outputLength = Math.max(maxLength,tokensFiltered.size());
-//        System.out.println(tokensFiltered);
-
 
         INDArray features = Nd4j.create(outputLength, vectorSize, tokensFiltered.size());
 
         for( int j=0; j<tokensFiltered.size() && j<maxLength; j++ ){
             String token = tokensFiltered.get(j);
-//            System.out.println(token + "    ==== 1 ====");
             INDArray vector = wordVectors.getWordVectorMatrix(token);
-//            System.out.println(vector + "    ==== 2 ====");
             features.put(new INDArrayIndex[]{NDArrayIndex.point(0), NDArrayIndex.all(), NDArrayIndex.point(j)}, vector);
-//            System.out.println(features.get(new INDArrayIndex[]{NDArrayIndex.point(0), NDArrayIndex.all(), NDArrayIndex.point(j)}));
         }
-
         return features;
     }
 
